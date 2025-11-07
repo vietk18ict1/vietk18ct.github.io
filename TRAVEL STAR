@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Star Group - Vé Máy Bay & Du Lịch</title>
+    <!-- Tải Tailwind CSS --><script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tải Font Awesome (cho các icon) --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Tải Google Fonts (Roboto) --><link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&display=swap" rel="stylesheet">
+    
+    <!-- Tùy chỉnh màu sắc Tailwind để khớp với mẫu --><script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'custom-gold': '#c09a58', // Màu vàng đồng/vàng sậm
+                        'custom-dark': '#333333', // Màu nền footer
+                        'custom-gray': '#f4f4f4', // Màu nền sáng
+                        'custom-section-gray': '#6a6a6a', // Màu nền phần "ưu đãi"
+                    },
+                    fontFamily: {
+                        'sans': ['Roboto', 'sans-serif'], // Sử dụng font Roboto
+                        'serif': ['Merriweather', 'serif'] // Thêm font Merriweather cho tiêu đề
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* CSS tùy chỉnh bổ sung */
+        body {
+            font-family: 'Roboto', 'sans-serif';
+        }
+        .top-bar {
+            background-color: #c09a58; /* Màu vàng đồng từ ảnh */
+        }
+        .nav-link {
+            @apply text-custom-gold hover:opacity-80 px-3 py-2 rounded-md text-sm font-medium;
+        }
+        .nav-link-active {
+            @apply text-custom-gold border-2 border-custom-gold rounded-full px-4 py-1 text-sm font-medium;
+        }
+        .welcome-circle img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid #eee;
+        }
+        
+        .btn-gold {
+            background-color: transparent; /* Nền trong suốt */
+            border: 1px solid #c09a58; /* Viền vàng đồng */
+            color: #c09a58; /* Chữ vàng đồng */
+            padding: 0.5rem 1.75rem; /* Padding tương tự ảnh */
+            border-radius: 0.375rem; /* Bo góc nhẹ */
+            font-weight: 600; /* Bán đậm */
+            transition: all 0.2s ease-in-out;
+        }
+        .btn-gold:hover {
+            background-color: #c09a58; /* Đổi nền khi hover */
+            color: white; /* Đổi chữ khi hover */
+        }
+        /* Nút "Lựa chọn" đặc biệt cho phần ưu đãi */
+        .btn-select-golden-border {
+            background-color: transparent; /* Nền trong suốt */
+            border: 1px solid #c09a58; /* Viền vàng đồng */
+            color: #c09a58; /* Chữ vàng đồng */
+            padding: 0.5rem 1.75rem; /* Padding tương tự ảnh */
+            border-radius: 0.375rem; /* Bo góc nhẹ */
+            font-weight: 600; /* Bán đậm */
+            transition: all 0.2s ease-in-out;
+        }
+        .btn-select-golden-border:hover {
+            background-color: #c09a58; /* Đổi nền khi hover */
+            color: white; /* Đổi chữ khi hover */
+        }
+
+        .footer-dark {
+            background-color: #333333; /* Màu đen/xám đậm của footer */
+            color: #ccc;
+        }
+        .footer-bottom-bar {
+            background-color: #c09a58; /* Màu vàng đồng của thanh dưới cùng */
+            color: #333;
+        }
+        /* Style cho phần bảng giá gói du lịch giống hệt ảnh mới */
+        .package-card {
+            background-color: white;
+            border-radius: 0.5rem; /* rounded-lg */
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+        }
+        .package-header {
+            background-color: #c09a58; /* custom-gold */
+            color: white;
+            text-align: center;
+            padding: 0.75rem 1rem; /* p-3 */
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 700; /* font-bold */
+        }
+        .package-image {
+            width: 100%;
+            height: auto;
+            border-top: 1px solid #e5e7eb; /* border-t border-gray-200 */
+            border-bottom: 1px solid #e5e7eb; /* border-b border-gray-200 */
+        }
+        .package-content {
+            padding: 1.25rem; /* p-5 */
+            text-align: center;
+            /* Đã xóa border-left, border-right, border-bottom ở đây để bỏ khung thừa */
+            border-radius: 0 0 0.5rem 0.5rem; /* rounded-b-lg */
+        }
+        .package-title {
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 700; /* font-bold */
+            margin-bottom: 0.75rem; /* mb-3 */
+        }
+        .package-features {
+            color: #4b5563; /* text-gray-600 */
+            margin-bottom: 1.25rem; /* mb-5 */
+            list-style: none; /* Bỏ bullet mặc định */
+            padding: 0;
+        }
+        .package-features li {
+            padding: 0.25rem 0; /* space-y-2 */
+            border-bottom: 1px dashed #e5e7eb; /* viền đứt quãng */
+        }
+        .package-features li:last-child {
+            border-bottom: none; /* Bỏ viền dưới cùng */
+        }
+
+        /* Gói nổi bật (có viền vàng) */
+        .package-card.featured .package-content {
+            border: 2px solid #c09a58; /* border-2 border-custom-gold */
+            border-top: none; /* Bỏ border top để nó liền với header vàng */
+        }
+        .package-card.featured .package-header {
+            border-top: 2px solid #c09a58; /* border-t-2 border-custom-gold */
+            border-left: 2px solid #c09a58; /* border-l-2 border-custom-gold */
+            border-right: 2px solid #c09a58; /* border-r-2 border-custom-gold */
+            border-radius: 0.5rem 0.5rem 0 0; /* rounded-t-lg */
+        }
+        .package-card.featured {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
+        }
+
+        /* Các style inline trước đây */
+        .section-title-inline {
+            font-family: 'Merriweather', serif;
+            font-size: 2.25rem; /* text-4xl */
+            line-height: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            color: #c09a58; /* custom-gold */
+            margin-bottom: 0.5rem;
+        }
+        .section-subtitle-inline {
+            text-align: center;
+            color: #374151; /* gray-700 */
+            font-size: 1.125rem; /* text-lg */
+            margin-bottom: 2rem;
+            font-family: 'Merriweather', serif;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body class="bg-white">
+
+    <!-- 1. Thanh thông tin liên hệ (Trên cùng) --><div class="top-bar text-white text-sm">
+        <div class="container mx-auto px-6 py-2 flex flex-wrap justify-between items-center">
+            <div class="text-xs md:text-sm">
+                CÔNG TY TNHH DU LỊCH VÀ LỮ HÀNH STAR GROUP
+            </div>
+            <div class="flex flex-wrap gap-x-4 gap-y-1 mt-1 md:mt-0 text-xs md:text-sm">
+                <span><i class="fa fa-map-marker-alt mr-1"></i> xxx Đường 3/2, P6, Q10, Tp. Hồ Chí Minh</span>
+                <span><i class="fa fa-envelope mr-1"></i> webdemo@gmail.com</span>
+                <span><i class="fa fa-phone-alt mr-1"></i> 0914.456.xxx</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Header chính & Menu --><header class="bg-white shadow-sm sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <!-- Logo --><a href="#" class="text-3xl font-bold text-custom-gold">
+                <i class="fa fa-plane-departure mr-2"></i>
+                TRAVEL STAR
+            </a>
+
+            <!-- Menu cho Desktop --><div class="hidden md:flex items-center space-x-2">
+                <a href="#" style="color: #c09a58; border: 2px solid #c09a58; border-radius: 9999px; padding: 0.25rem 1rem; font-size: 0.875rem; font-weight: 500;">Trang chủ</a>
+                <a href="#" style="color: #c09a58; padding: 0.5rem 0.75rem; border-radius: 0.375rem; font-size: 0.875rem; font-weight: 500;">Giới thiệu</a>
+                <a href="#" style="color: #c09a58; padding: 0.5rem 0.75rem; border-radius: 0.375rem; font-size: 0.875rem; font-weight: 500;">Tour Du lịch</a>
+                <a href="#" style="color: #c09a58; padding: 0.5rem 0.75rem; border-radius: 0.375rem; font-size: 0.875rem; font-weight: 500;">Đặt vé</a>
+                <a href="#" style="color: #c09a58; padding: 0.5rem 0.75rem; border-radius: 0.375rem; font-size: 0.875rem; font-weight: 500;">Ưu đãi</a>
+                <a href="#" style="color: #c09a58; padding: 0.5rem 0.75rem; border-radius: 0.375rem; font-size: 0.875rem; font-weight: 500;">Blog Du lịch</a>
+                <a href="#" style="color: #c09a58; padding: 0.5rem 0.75rem; border-radius: 0.375rem; font-size: 0.875rem; font-weight: 500;">Liên hệ</a>
+            </div>
+
+            <!-- Nút menu cho Mobile --><div class="md:hidden">
+                <button class="text-gray-700 hover:text-custom-gold text-2xl">
+                    <i class="fa fa-bars"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- 3. Phần Chào mừng --><section class="container mx-auto px-6 py-16">
+        <h2 class="section-title-inline">Chào mừng bạn đến với Travel Star Group</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 mt-12 text-center">
+            <!-- Mục 1 --><div class="flex flex-col items-center">
+                <div class="welcome-circle">
+                    <img src="https://travelpass.com.vn/assets/uploads/2023/03/ve-may-bay.jpg" alt="Vé máy bay">
+                </div>
+                <h3 class="text-xl font-semibold text-gray-700 mt-4">Vé máy bay giá rẻ</h3>
+            </div>
+            <!-- Mục 2 --><div class="flex flex-col items-center">
+                <div class="welcome-circle">
+                    <img src="https://tour.dulichvietnam.com.vn/uploads/tour/tmp_1615514371.png" alt="Tour trọn gói">
+                </div>
+                <h3 class="text-xl font-semibold text-gray-700 mt-4">Tour trọn gói</h3>
+            </div>
+            <!-- Mục 3 --><div class="flex flex-col items-center">
+                <div class="welcome-circle">
+                    <img src="https://dulichbienhesensetravel.com/view/at_cac-khach-san-resort-o-lang-co_bfacd25104915721546116674252574c.jpg" alt="Khách sạn & Resort">
+                </div>
+                <h3 class="text-xl font-semibold text-gray-700 mt-4">Khách sạn & Resort</h3>
+            </div>
+            <!-- Mục 4 --><div class="flex flex-col items-center">
+                <div class="welcome-circle">
+                    <img src="https://vietluxtour.com/Upload/images/Banner-dv-Visa-01.jpg" alt="Dịch vụ Visa">
+                </div>
+                <h3 class="text-xl font-semibold text-gray-700 mt-4">Dịch vụ Visa</h3>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Phần Ưu đãi đặc biệt --><section class="bg-custom-section-gray py-16">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold text-center text-white mb-10">Ưu đãi đặc biệt cho khách hàng</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Card ưu đãi 1 --><div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="p-4 text-right">
+                        <span class="text-gray-500 line-through">3.500.000đ</span>
+                        <span class="text-red-600 text-xl font-bold ml-2">2.999.000đ</span>
+                    </div>
+                    <img src="https://vcdn1-dulich.vnecdn.net/2022/06/03/cauvang-1654247842-9403-1654247849.jpg?w=1200&h=0&q=100&dpr=1&fit=crop&s=Swd6JjpStebEzT6WARcoOA" alt="Tour Đà Nẵng" class="w-full border-t border-b border-gray-200">
+                    <div class="p-5 text-center">
+                        <h3 class="text-lg text-gray-800 mb-4">Tour Đà Nẵng 3N2Đ</h3>
+                        <a href="#" class="btn-select-golden-border">Lựa chọn</a>
+                    </div>
+                </div>
+                <!-- Card ưu đãi 2 --><div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="p-4 text-right">
+                        <span class="text-gray-500 line-through">4.200.000đ</span>
+                        <span class="text-red-600 text-xl font-bold ml-2">3.800.000đ</span>
+                    </div>
+                    <img src="https://luhanhtour.com/wp-content/uploads/2025/02/PQ-WEB-sao-che%CC%81p.jpg" alt="Tour Phú Quốc" class="w-full border-t border-b border-gray-200">
+                    <div class="p-5 text-center">
+                        <h3 class="text-lg text-gray-800 mb-4">Combo Phú Quốc 4N3Đ</h3>
+                        <a href="#" class="btn-select-golden-border">Lựa chọn</a>
+                    </div>
+                </div>
+                <!-- Card ưu đãi 3 --><div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="p-4 text-right">
+                        <span class="text-gray-500 line-through">5.000.000đ</span>
+                        <span class="text-red-600 text-xl font-bold ml-2">4.550.000đ</span>
+                    </div>
+                    <img src="https://a.travel-assets.com/findyours-php/viewfinder/images/res70/542000/542607-singapore.jpg" alt="Vé Singapore" class="w-full border-t border-b border-gray-200">
+                    <div class="p-5 text-center">
+                        <h3 class="text-lg text-gray-800 mb-4">Vé máy bay Singapore</h3>
+                        <a href="#" class="btn-select-golden-border">Lựa chọn</a>
+                    </div>
+                </div>
+                <!-- Card ưu đãi 4 --><div class="bg-white rounded-lg shadow-md overflow-hidden">
+                    <div class="p-4 text-right">
+                        <span class="text-gray-500 line-through">8.000.000đ</span>
+                        <span class="text-red-600 text-xl font-bold ml-2">7.200.000đ</span>
+                    </div>
+                    <img src="https://gcs.tripi.vn/public-tripi/tripi-feed/img/482783tOA/anh-mo-ta.png" alt="Tour Hàn Quốc" class="w-full border-t border-b border-gray-200">
+                    <div class="p-5 text-center">
+                        <h3 class="text-lg text-gray-800 mb-4">Tour Hàn Quốc 5N4Đ</h3>
+                        <a href="#" class="btn-select-golden-border">Lựa chọn</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. Bảng giá Gói Du Lịch --><section class="bg-custom-gray py-16">
+        <div class="container mx-auto px-6">
+            <h2 class="section-title-inline">Bảng giá gói du lịch</h2>
+            <p class="section-subtitle-inline">Chọn gói du lịch mà bạn quan tâm</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Gói 1 --><div class="package-card">
+                    <div class="package-header">
+                        5.000.000đ/người
+                    </div>
+                    <img src="https://dulichtoivaban.com/wp-content/uploads/2024/03/Uu-Dai-Lon-Cung-Vietnam-Airlines-San-Sang-Vui-He-2024-930x620.png.webp" alt="Gói Tiết Kiệm" class="package-image">
+                    <div class="package-content">
+                        <h3 class="package-title">Gói Tiết Kiệm</h3>
+                        <ul class="package-features">
+                            <li>Vé máy bay khứ hồi</li>
+                            <li>Khách sạn 3 sao</li>
+                            <li>Xe đưa đón sân bay</li>
+                        </ul>
+                        <a href="#" class="btn-gold">Mua gói này</a>
+                    </div>
+                </div>
+
+                <!-- Gói 2 (Nổi bật) --><div class="package-card featured">
+                    <div class="package-header">
+                        8.500.000đ/người
+                    </div>
+                    <img src="https://scontent.fhan12-1.fna.fbcdn.net/v/t1.6435-9/64660835_2254721717914987_8748253022175363072_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=111&ccb=1-7&_nc_sid=833d8c&_nc_ohc=t7zEywHayY0Q7kNvwG4gJjd&_nc_oc=Adn9SoRRMvbIyYMQDdtkS8cLobj_Xm26xONe17Vc_n_SEkoZmv0P5jnuWD8iOtZahco&_nc_zt=23&_nc_ht=scontent.fhan12-1.fna&_nc_gid=olXvRWhOzs4sa0X1VeykbA&oh=00_AfjAb--S9CMqomXSQZrOWlgaEJX8JAmvaWj9dSwyU3qJ9w&oe=69350438" alt="Gói Gia Đình" class="package-image">
+                    <div class="package-content">
+                        <h3 class="package-title">Gói Gia Đình</h3>
+                        <ul class="package-features">
+                            <li>Vé máy bay khứ hồi</li>
+                            <li>Khách sạn 4 sao</li>
+                            <li>Tour tham quan hàng ngày</li>
+                        </ul>
+                        <a href="#" class="btn-gold">Mua gói này</a>
+                    </div>
+                </div>
+
+                <!-- Gói 3 --><div class="package-card">
+                    <div class="package-header">
+                        12.000.000đ/người
+                    </div>
+                    <img src="https://www.vietnamairlines.com/~/media/ContentImage/trai-nghiem-bay/Hang-thuong-giaHa%CC%A3ng-thu%CC%9Bo%CC%9Bng-gia.png" alt="Gói Cao Cấp" class="package-image">
+                    <div class="package-content">
+                        <h3 class="package-title">Gói Cao Cấp</h3>
+                        <ul class="package-features">
+                            <li>Vé máy bay hạng C</li>
+                            <li>Resort 5 sao</li>
+                            <li>Xe riêng & Hướng dẫn viên</li>
+                        </ul>
+                        <a href="#" class="btn-gold">Mua gói này</a>
+                    </div>
+                </div>
+
+                <!-- Gói 4 --><div class="package-card">
+                    <div class="package-header">
+                        15.000.000đ/người
+                    </div>
+                    <img src="https://www.samdihotel.vn/uploads/image/images/Honeymoon.jpg" alt="Gói Trăng Mật" class="package-image">
+                    <div class="package-content">
+                        <h3 class="package-title">Gói Trăng Mật</h3>
+                        <ul class="package-features">
+                            <li>Vé máy bay khứ hồi</li>
+                            <li>Biệt thự/Bungalow riêng</li>
+                            <li>Bữa tối lãng mạn</li>
+                        </ul>
+                        <a href="#" class="btn-gold">Mua gói này</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. Footer --><footer class="footer-dark pt-16">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <!-- Cột 1: Giới thiệu --><div>
+                    <a href="#" class="text-3xl font-bold text-custom-gold mb-4 inline-block">
+                        <i class="fa fa-plane-departure mr-2"></i>
+                        TRAVEL STAR
+                    </a>
+                    <p class="text-sm">
+                        Tự hào là một trong những đơn vị lữ hành uy tín tại TP. HCM, Travel Star Group xứng đáng là điểm đến quen thuộc của những ai thích khám phá và mong muốn tận hưởng dịch vụ du lịch tốt nhất.
+                    </p>
+                </div>
+
+                <!-- Cột 2: Thông tin liên hệ & Form --><div>
+                    <h4 class="text-xl font-semibold text-white mb-4">Thông tin liên hệ</h4>
+                    <ul class="space-y-2 text-sm mb-6">
+                        <li><i class="fa fa-map-marker-alt w-5 mr-1"></i> xxx Đường 3/2, P6, Q10, Tp. Hồ Chí Minh</li>
+                        <li><i class="fa fa-envelope w-5 mr-1"></i> webdemo@gmail.com</li>
+                        <li><i class="fa fa-phone-alt w-5 mr-1"></i> 0914.456.xxx</li>
+                    </ul>
+                    
+                    <!-- Form liên hệ --><form id="contact-form">
+                        <div class="mb-3">
+                            <input type="text" placeholder="Họ và tên của bạn" class="w-full px-4 py-2 rounded-md bg-gray-700 text-white border border-gray-600 focus:outline-none focus:border-custom-gold" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="email" placeholder="Email liên hệ" class="w-full px-4 py-2 rounded-md bg-gray-700 text-white border border-gray-600 focus:outline-none focus:border-custom-gold" required>
+                        </div>
+                        <div class="mb-3">
+                            <textarea rows="3" placeholder="Nội dung cần tư vấn..." class="w-full px-4 py-2 rounded-md bg-gray-700 text-white border border-gray-600 focus:outline-none focus:border-custom-gold"></textarea>
+                        </div>
+                        <button type="submit" class="btn-gold">Gửi liên hệ</button>
+                    </form>
+                </div>
+
+                <!-- Cột 3: Kết nối --><div>
+                    <h4 class="text-xl font-semibold text-white mb-4">Kết nối với chúng tôi</h4>
+                    <div class="flex space-x-3">
+                        <a href="#" class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white text-xl hover:bg-opacity-80">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white text-xl hover:bg-opacity-80">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-blue-400 rounded-full flex items-center justify-center text-white text-xl hover:bg-opacity-80">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-red-600 rounded-full flex items-center justify-center text-white text-xl hover:bg-opacity-80">
+                            <i class="fab fa-pinterest"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-red-700 rounded-full flex items-center justify-center text-white text-xl hover:bg-opacity-80">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thanh Copyright dưới cùng --><div class="footer-bottom-bar mt-12 py-3 text-sm">
+            <div class="container mx-auto px-6 flex flex-wrap justify-between items-center">
+                <span class="font-medium">Copyright 2024 © Web Demo</span>
+                <span class="font-semibold">Hotline kỹ thuật: 0972.939.xxx</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Nút "Lên đầu trang" (Tùy chọn) --><button id="to-top-button" title="Go to top"
+        class="hidden fixed bottom-5 right-5 z-50 p-3 bg-custom-gold text-white rounded-full shadow-lg hover:bg-opacity-80 transition-all duration-300">
+        <i class="fa fa-arrow-up"></i>
+    </button>
+
+    <script>
+        // JavaScript cho nút "Lên đầu trang"
+        const toTopButton = document.getElementById('to-top-button');
+        
+        window.onscroll = function () {
+            if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+                toTopButton.classList.remove('hidden');
+            } else {
+                toTopButton.classList.add('hidden');
+            }
+        };
+
+        toTopButton.onclick = function () {
+            document.body.scrollTop = 0; // For Safari
+            document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+        };
+
+        // Ngăn form gửi đi thật
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Form đã được gửi (demo)!');
+            // Xóa nội dung form
+            this.reset();
+        });
+    </script>
+
+</body>
+</html>
